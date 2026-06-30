@@ -23,9 +23,10 @@
   function navCurrent(section) {
     if (page === "home" && section === "home") return ' aria-current="page"';
     if ((page === "apps" || page === "app") && section === "apps") return ' aria-current="page"';
+    if (page === "profile" && section === "profile") return ' aria-current="page"';
+    if (page === "contact" && section === "contact") return ' aria-current="page"';
     if ((page === "privacy" || page === "privacy-detail") && section === "privacy") return ' aria-current="page"';
     if ((page === "terms" || page === "terms-detail") && section === "terms") return ' aria-current="page"';
-    if (page === "contact" && section === "contact") return ' aria-current="page"';
     return "";
   }
 
@@ -33,17 +34,15 @@
     return `
       <header class="site-header">
         <div class="container header-inner">
-          <a class="brand" href="${url("")}" aria-label="${site.name} ホーム">
+          <a class="brand" href="${url("")}" aria-label="なんだかん ホーム">
             <span class="brand-mark" aria-hidden="true">N</span>
-            <span>${site.name}</span>
+            <span>なんだかん</span>
           </a>
           <button class="menu-button" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="メニューを開く"><span></span></button>
           <nav class="nav" id="site-nav" aria-label="メインナビゲーション">
-            <a href="${url("")}"${navCurrent("home")}>Home</a>
-            <a href="${url("apps/")}"${navCurrent("apps")}>Apps</a>
-            <a href="${url("privacy/")}"${navCurrent("privacy")}>Privacy Policy</a>
-            <a href="${url("terms/")}"${navCurrent("terms")}>Terms</a>
-            <a href="${url("contact/")}"${navCurrent("contact")}>Contact</a>
+            <a href="${url("apps/")}"${navCurrent("apps")}>アプリ</a>
+            <a href="${url("profile/")}"${navCurrent("profile")}>プロフィール</a>
+            <a href="${url("contact/")}"${navCurrent("contact")}>おはなし</a>
           </nav>
         </div>
       </header>`;
@@ -53,33 +52,31 @@
     return `
       <footer class="site-footer">
         <div class="container footer-inner">
-          <div class="copyright">© 2026 ${site.name}</div>
-          <div class="footer-links">
-            <a href="${url("privacy/")}">Privacy Policy</a>
-            <a href="${url("terms/")}">Terms of Use</a>
-            <a href="${url("contact/")}">Contact</a>
+          <div class="footer-brand">
+            <div class="footer-brand-mark" aria-hidden="true">N</div>
+            <span>なんだかん</span>
           </div>
+          <div class="footer-links">
+            <a href="${url("privacy/")}">プライバシー</a>
+            <a href="${url("terms/")}">利用規約</a>
+            <a href="${url("contact/")}">おはなし</a>
+          </div>
+          <span class="copyright">© 2026 NANDAKAN</span>
         </div>
       </footer>`;
   }
 
-  function appIcon(app) {
-    return `<div class="app-icon ${app.color}" aria-hidden="true">${escapeHtml(app.mark)}</div>`;
+  function appIcon(app, large) {
+    return `<div class="app-icon ${app.color}${large ? " large" : ""}" aria-hidden="true">${escapeHtml(app.mark)}</div>`;
   }
 
   function appCard(app) {
     return `
-      <article class="app-card">
+      <a class="app-card" href="${url(`apps/${app.slug}/`)}">
         ${appIcon(app)}
-        <span class="status">${escapeHtml(app.status)}</span>
         <h3>${escapeHtml(app.name)}</h3>
-        <p>${escapeHtml(app.description)}</p>
-        <div class="card-links">
-          <a class="link-arrow" href="${url(`apps/${app.slug}/`)}">詳細</a>
-          <a href="${url(`privacy/${app.slug}/`)}">プライバシー</a>
-          <a href="${url(`terms/${app.slug}/`)}">利用規約</a>
-        </div>
-      </article>`;
+        <p>${escapeHtml(app.category)}</p>
+      </a>`;
   }
 
   function breadcrumbs(items) {
@@ -93,31 +90,31 @@
     return `
       <main>
         <section class="hero">
+          <div style="position:absolute;left:60px;top:70px;width:64px;height:64px;border-radius:50%;background:oklch(0.78 0.12 150);animation:ndk-float 5s ease-in-out infinite;pointer-events:none;"></div>
+          <div style="position:absolute;right:90px;top:130px;width:46px;height:46px;border-radius:14px;background:oklch(0.78 0.12 250);animation:ndk-float-rotated 7s ease-in-out infinite;pointer-events:none;"></div>
+          <div style="position:absolute;right:150px;bottom:90px;width:34px;height:34px;border-radius:50%;background:oklch(0.78 0.12 75);pointer-events:none;"></div>
           <div class="container">
-            <p class="eyebrow">Independent iOS Developer</p>
-            <h1>毎日に、小さな便利と楽しさを。</h1>
-            <p class="hero-copy">${site.name} は、日常生活・家族・仕事を少し便利にするiOSアプリを開発する個人開発サイトです。</p>
+            <h1>なんだか、<br>べんり。</h1>
+            <p class="hero-copy">くらしのすきまの「なんだかな〜」を、<br>ちいさなアプリでまるっと解決。</p>
             <div class="button-row">
-              <a class="button primary link-arrow" href="${url("apps/")}">アプリを見る</a>
-              <a class="button" href="${url("privacy/")}">プライバシーポリシー</a>
+              <a class="button primary" href="${url("apps/")}">アプリをのぞく →</a>
+            </div>
+            <div class="hero-phones" aria-hidden="true">
+              <div class="hero-phone" style="transform:rotate(-5deg)"><div class="hero-phone-inner" style="background:oklch(0.92 0.05 35)"></div></div>
+              <div class="hero-phone" style="margin-top:-14px"><div class="hero-phone-inner" style="background:oklch(0.92 0.05 250)"></div></div>
+              <div class="hero-phone" style="transform:rotate(5deg)"><div class="hero-phone-inner" style="background:oklch(0.92 0.05 150)"></div></div>
             </div>
           </div>
         </section>
-        <section class="section soft">
-          <div class="container">
-            <div class="section-heading">
-              <p class="eyebrow">Our Apps</p>
-              <h2>暮らしのそばにあるアプリ</h2>
-              <p>家族との時間から、ちょっとした遊びまで。日常に自然になじむ体験を丁寧につくっています。</p>
-            </div>
-            <div class="app-grid">${apps.map(appCard).join("")}</div>
-          </div>
-        </section>
+
         <section class="section">
           <div class="container">
-            <div class="cta-panel">
-              <div><h2>ご質問や不具合のご連絡</h2><p>各アプリに関するお問い合わせは、メールで受け付けています。</p></div>
-              <a class="button" href="${url("contact/")}">お問い合わせ</a>
+            <div class="section-heading">
+              <h2>つくったアプリ</h2>
+            </div>
+            <div class="app-grid">${apps.map(appCard).join("")}</div>
+            <div style="text-align:center;margin-top:36px;">
+              <a class="button" href="${url("apps/")}">すべて見る →</a>
             </div>
           </div>
         </section>
@@ -125,14 +122,76 @@
   }
 
   function renderApps() {
+    const count = String(apps.length).padStart(2, "0");
     return `
       <main>
-        <section class="page-hero"><div class="container">
-          ${breadcrumbs([{ label: "Home", href: "" }, { label: "Apps" }])}
-          <p class="eyebrow">Our Apps</p><h1>アプリ一覧</h1>
-          <p>日常生活・家族・仕事を少し便利にするiOSアプリを開発しています。</p>
-        </div></section>
-        <section class="section" style="padding-top:24px"><div class="container"><div class="app-grid">${apps.map(appCard).join("")}</div></div></section>
+        <section class="page-hero">
+          <div class="container">
+            <div class="page-label">APPS — ${count}</div>
+            <h1>アプリ一覧</h1>
+            <p>どれも「自分が使いたいから」つくった、ちいさくて素直なアプリたちです。</p>
+          </div>
+        </section>
+        <section style="padding-bottom:80px">
+          <div class="container">
+            <div class="app-list">
+              ${apps.map((app) => `
+                <div class="app-list-card">
+                  ${appIcon(app, true)}
+                  <div class="app-list-info">
+                    <h3>${escapeHtml(app.name)}</h3>
+                    <p>${escapeHtml(app.description)}</p>
+                  </div>
+                  <a class="button dark" href="${url(`apps/${app.slug}/`)}">詳細を見る</a>
+                </div>`).join("")}
+            </div>
+          </div>
+        </section>
+      </main>`;
+  }
+
+  function renderProfile() {
+    return `
+      <main>
+        <section class="page-hero">
+          <div class="container">
+            <div class="page-label">PROFILE</div>
+            <h1>つくってるひと</h1>
+          </div>
+        </section>
+        <section style="padding-bottom:80px">
+          <div class="container">
+            <div class="profile-hero-card">
+              <div class="profile-avatar" aria-hidden="true"></div>
+              <div>
+                <h2>なんだかん</h2>
+                <p>本業のかたわら、自分と家族のために小さなiOSアプリをつくっている個人開発者です。「あったらいいな」を、ひとつずつ形にしています。</p>
+              </div>
+            </div>
+
+            <div class="stats-grid">
+              <div class="stat-card">
+                <div class="stat-number" style="color:var(--accent)">${apps.length}</div>
+                <div class="stat-label">開発中のアプリ</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-number" style="color:oklch(0.66 0.14 150)">Swift</div>
+                <div class="stat-label">使っている言語</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-number" style="color:oklch(0.66 0.14 250)">2026—</div>
+                <div class="stat-label">活動年</div>
+              </div>
+            </div>
+
+            <div class="values-card">
+              <h3>つくるときに大事にしていること</h3>
+              <div class="value-item"><span class="value-bullet" style="color:var(--accent)">●</span>ひとつの「めんどう」だけを、まっすぐ解く。</div>
+              <div class="value-item"><span class="value-bullet" style="color:oklch(0.66 0.14 150)">●</span>説明書がいらないくらい、やさしくする。</div>
+              <div class="value-item"><span class="value-bullet" style="color:oklch(0.66 0.14 250)">●</span>毎日ひらいても、ちょっとうれしい。</div>
+            </div>
+          </div>
+        </section>
       </main>`;
   }
 
@@ -141,7 +200,7 @@
     return `
       <main>
         <section class="detail-hero"><div class="container">
-          ${breadcrumbs([{ label: "Home", href: "" }, { label: "Apps", href: "apps/" }, { label: app.name }])}
+          ${breadcrumbs([{ label: "Home", href: "" }, { label: "アプリ", href: "apps/" }, { label: app.name }])}
           <div class="detail-layout">
             ${appIcon(app)}
             <div class="detail-copy">
@@ -150,17 +209,20 @@
               <p class="category">${escapeHtml(app.category)} · iPhone向け</p>
               <p class="lead">${escapeHtml(app.description)}</p>
               <div class="legal-links">
-                <a class="button small" href="${url(`privacy/${app.slug}/`)}">プライバシーポリシー</a>
-                <a class="button small" href="${url(`terms/${app.slug}/`)}">利用規約</a>
+                <a class="button" style="padding:12px 22px;font-size:14px;" href="${url(`privacy/${app.slug}/`)}">プライバシーポリシー</a>
+                <a class="button" style="padding:12px 22px;font-size:14px;" href="${url(`terms/${app.slug}/`)}">利用規約</a>
               </div>
             </div>
           </div>
         </div></section>
-        <section class="section soft"><div class="container">
-          <div class="section-heading"><p class="eyebrow">Highlights</p><h2>主な特徴</h2></div>
+        <section style="padding:60px 0"><div class="container">
+          <div class="section-heading">
+            <div class="page-label" style="margin-bottom:8px">HIGHLIGHTS</div>
+            <h2>主な特徴</h2>
+          </div>
           <div class="feature-grid">${app.highlights.map((item, index) => `<div class="feature"><span class="feature-number">0${index + 1}</span><h3>${escapeHtml(item)}</h3></div>`).join("")}</div>
         </div></section>
-        <section class="section"><div class="container">
+        <section style="padding:0 0 80px"><div class="container">
           <div class="cta-panel"><div><h2>現在、開発を進めています</h2><p>リリース情報は、このページで順次お知らせします。</p></div><a class="button" href="${url("apps/")}">アプリ一覧へ</a></div>
         </div></section>
       </main>`;
@@ -176,7 +238,8 @@
       <main>
         <section class="page-hero"><div class="container">
           ${breadcrumbs([{ label: "Home", href: "" }, { label: title }])}
-          <p class="eyebrow">${isPrivacy ? "Privacy" : "Terms"}</p><h1>${title}</h1><p>${description}</p>
+          <div class="page-label">${isPrivacy ? "PRIVACY" : "TERMS"}</div>
+          <h1>${title}</h1><p>${description}</p>
         </div></section>
         <section><div class="container directory">
           ${apps.map((app) => `<a class="directory-item" href="${url(`${kind}/${app.slug}/`)}"><div><strong>${escapeHtml(app.name)}</strong><span>${title}を読む</span></div><span class="directory-arrow" aria-hidden="true">→</span></a>`).join("")}
@@ -221,7 +284,7 @@
       <main>
         <section class="page-hero"><div class="container">
           ${breadcrumbs([{ label: "Home", href: "" }, { label: title, href: `${kind}/` }, { label: app.name }])}
-          <p class="eyebrow">${isPrivacy ? "Privacy Policy" : "Terms of Use"}</p>
+          <div class="page-label">${isPrivacy ? "PRIVACY POLICY" : "TERMS OF USE"}</div>
           <h1>${escapeHtml(app.name)}<br>${title}</h1>
           <p>${escapeHtml(app.name)}をご利用いただく際の${isPrivacy ? "情報の取り扱い" : "利用条件"}について記載しています。</p>
         </div></section>
@@ -238,31 +301,53 @@
     const bodyText = encodeURIComponent("アプリ名：\n利用端末：\niOSバージョン：\n\nお問い合わせ内容：\n");
     return `
       <main>
-        <section class="page-hero"><div class="container">
-          ${breadcrumbs([{ label: "Home", href: "" }, { label: "Contact" }])}
-          <p class="eyebrow">Contact</p><h1>お問い合わせ</h1>
-          <p>アプリに関するご質問、不具合のご報告、ご要望などをメールで受け付けています。</p>
-        </div></section>
-        <section><div class="container">
-          <div class="contact-card">
-            <h2>メールでのお問い合わせ</h2>
-            <p>状況を確認しやすくするため、次の内容を記載してお送りください。</p>
-            <ul class="contact-list"><li>アプリ名</li><li>利用端末</li><li>iOSバージョン</li><li>お問い合わせ内容</li></ul>
-            <a class="button primary" href="mailto:${escapeHtml(site.email)}?subject=${subject}&body=${bodyText}">${escapeHtml(site.email)}</a>
-            <p style="font-size:13px;margin-bottom:0">ご返信までお時間をいただく場合があります。あらかじめご了承ください。</p>
+        <section class="page-hero">
+          <div class="container">
+            <div class="page-label">CONTACT</div>
+            <h1>おはなししよう</h1>
+            <p>ご感想・ご要望・不具合のご連絡、なんでもどうぞ。のんびりお返事します。</p>
           </div>
-        </div></section>
+        </section>
+        <section style="padding-bottom:80px">
+          <div class="container">
+            <div class="contact-wrapper">
+              <div class="contact-form-card">
+                <div class="form-group">
+                  <div>
+                    <div class="form-label">おなまえ</div>
+                    <div class="form-field">山田 はなこ</div>
+                  </div>
+                  <div>
+                    <div class="form-label">メールアドレス</div>
+                    <div class="form-field">example@example.com</div>
+                  </div>
+                  <div>
+                    <div class="form-label">メッセージ</div>
+                    <div class="form-field textarea">このアプリのここが好きです…</div>
+                  </div>
+                  <a class="button primary" style="align-self:flex-start" href="mailto:${escapeHtml(site.email)}?subject=${subject}&body=${bodyText}">送信する →</a>
+                </div>
+              </div>
+              <div class="contact-social">
+                <a class="social-pill" href="#">X (Twitter) でDM</a>
+                <a class="social-pill" href="#">note</a>
+                <a class="social-pill" href="#">GitHub</a>
+              </div>
+            </div>
+          </div>
+        </section>
       </main>`;
   }
 
   function renderNotFound() {
-    return `<main><section class="page-hero"><div class="container"><p class="eyebrow">Not Found</p><h1>ページが見つかりません</h1><p>URLをご確認いただくか、トップページへお戻りください。</p><div class="button-row" style="margin-top:28px"><a class="button primary" href="${url("")}">ホームへ</a></div></div></section></main>`;
+    return `<main><section class="page-hero"><div class="container"><div class="page-label">NOT FOUND</div><h1>ページが見つかりません</h1><p>URLをご確認いただくか、トップページへお戻りください。</p><div class="button-row" style="margin-top:28px;justify-content:flex-start"><a class="button primary" href="${url("")}">ホームへ</a></div></div></section></main>`;
   }
 
   let content;
   if (page === "home") content = renderHome();
   else if (page === "apps") content = renderApps();
   else if (page === "app") content = renderAppDetail(appBySlug(slug));
+  else if (page === "profile") content = renderProfile();
   else if (page === "privacy") content = renderDirectory("privacy");
   else if (page === "terms") content = renderDirectory("terms");
   else if (page === "privacy-detail") content = renderLegal("privacy", appBySlug(slug));
