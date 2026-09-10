@@ -1,6 +1,6 @@
 # Everyday Apps Studio
 
-iOS個人開発者「Everyday Apps Studio」の公式ポータルサイトです。アプリ紹介、アプリ別プライバシーポリシー、アプリ別利用規約、お問い合わせ窓口を、GitHub Pagesで無料公開するための静的サイトとして構成しています。
+iOS個人開発者「NANDAKAN」の公式ポータルサイトです。アプリ紹介、アプリ別プライバシーポリシー、アプリ別利用規約、サポート、データ削除案内、お問い合わせ窓口を、GitHub Pagesで公開するための静的サイトとして構成しています。
 
 HTML / CSS / JavaScriptのみを使用し、ビルドやサーバー処理は不要です。
 
@@ -34,10 +34,11 @@ python3 -m http.server 8000
 ## アプリを追加する
 
 1. `assets/js/app-data.js` の `window.EVERYDAY_APPS` にアプリ情報を1件追加します。
-2. 次の3ファイルを既存アプリのファイルから複製します。
+2. 次の4ファイルを既存アプリのファイルから複製します。
    - `apps/新しいslug/index.html`
    - `privacy/新しいslug/index.html`
    - `terms/新しいslug/index.html`
+   - `support/新しいslug/index.html`
 3. 各HTMLの `data-slug`、`title`、`description` を新しいアプリに合わせて変更します。
 
 一覧カード、アプリ詳細、プライバシーポリシー一覧、利用規約一覧は、`app-data.js` の内容から自動的に追加されます。slugには半角英小文字・数字・ハイフンを使用してください。
@@ -59,7 +60,7 @@ python3 -m http.server 8000
 `assets/js/app-data.js` の次の1行を変更します。お問い合わせページ、プライバシーポリシー、利用規約のメールリンクへ一括反映されます。
 
 ```js
-email: "support@example.com",
+email: "nandakan.studio@gmail.com",
 ```
 
 ## 公開前の確認
@@ -82,6 +83,25 @@ email: "support@example.com",
 | プライバシーポリシー一覧 | `/privacy/` |
 | 利用規約一覧 | `/terms/` |
 | お問い合わせ | `/contact/` |
+| サポート一覧 | `/support/` |
 | アプリ詳細 | `/apps/{slug}/` |
 | アプリ別プライバシーポリシー | `/privacy/{slug}/` |
 | アプリ別利用規約 | `/terms/{slug}/` |
+| アプリ別サポート | `/support/{slug}/` |
+| 夫婦稟議のデータ削除案内 | `/account-deletion/fuufu-ringi/` |
+
+## 夫婦稟議をApp Store Connectへ登録する際のURL
+
+公開ドメインを `https://example.com` とした場合は、次を登録します。
+
+| App Store Connectの項目 | URL |
+| --- | --- |
+| プライバシーポリシーURL | `https://example.com/privacy/fuufu-ringi/` |
+| サポートURL | `https://example.com/support/fuufu-ringi/` |
+| マーケティングURL | `https://example.com/apps/fuufu-ringi/` |
+| ユーザーのプライバシー選択URL（任意） | `https://example.com/account-deletion/fuufu-ringi/` |
+
+`app-ads.txt` は公開ドメイン直下の `https://example.com/app-ads.txt` で取得できる必要があります。
+
+> [!WARNING]
+> Webのデータ削除案内だけでは、Appleのアプリ内アカウント削除要件を満たしません。夫婦稟議のリリース版では、アプリ内から削除を開始できる機能を実装し、サイトの説明と実際の挙動を一致させてください。
