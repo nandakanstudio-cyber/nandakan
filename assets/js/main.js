@@ -456,6 +456,8 @@
   function renderContact() {
     const subject = encodeURIComponent("【お問い合わせ】アプリ名");
     const bodyText = encodeURIComponent("アプリ名：\n利用端末：\niOSバージョン：\n\nお問い合わせ内容：\n");
+    const endpoint = body.dataset.contactEndpoint || "";
+    const appOptions = apps.map((app) => `<option value="${escapeHtml(app.name)}"${app.slug === "fuufu-ringi" ? " selected" : ""}>${escapeHtml(app.name)}</option>`).join("");
     return `
       <main>
         <section class="page-hero">
@@ -469,26 +471,36 @@
           <div class="container">
             <div class="contact-wrapper">
               <div class="contact-form-card reveal">
-                <div class="form-group">
+                <form class="form-group" id="contact-form" action="${escapeHtml(endpoint)}" method="post">
                   <div>
-                    <div class="form-label">おなまえ</div>
-                    <div class="form-field">山田 はなこ</div>
+                    <label class="form-label" for="contact-name">おなまえ</label>
+                    <input class="form-field" id="contact-name" name="name" type="text" autocomplete="name" maxlength="80" required placeholder="山田 はなこ">
                   </div>
                   <div>
-                    <div class="form-label">メールアドレス</div>
-                    <div class="form-field">example@example.com</div>
+                    <label class="form-label" for="contact-email">メールアドレス</label>
+                    <input class="form-field" id="contact-email" name="email" type="email" autocomplete="email" inputmode="email" maxlength="254" required placeholder="hanako@example.com">
                   </div>
                   <div>
-                    <div class="form-label">メッセージ</div>
-                    <div class="form-field textarea">このアプリのここが好きです…</div>
+                    <label class="form-label" for="contact-app">対象アプリ</label>
+                    <select class="form-field" id="contact-app" name="app" required>${appOptions}<option value="その他">その他</option></select>
                   </div>
-                  <a class="button primary" style="align-self:flex-start" href="mailto:${escapeHtml(site.email)}?subject=${subject}&body=${bodyText}">メールを作成する →</a>
-                </div>
+                  <div>
+                    <label class="form-label" for="contact-category">お問い合わせ種別</label>
+                    <select class="form-field" id="contact-category" name="category" required><option value="" disabled selected>選択してください</option><option value="不具合">不具合</option><option value="使い方">使い方</option><option value="ご要望">ご要望</option><option value="アカウント・データ削除">アカウント・データ削除</option><option value="プライバシー">プライバシー</option><option value="その他">その他</option></select>
+                  </div>
+                  <div>
+                    <label class="form-label" for="contact-message">お問い合わせ内容</label>
+                    <textarea class="form-field textarea" id="contact-message" name="message" maxlength="5000" required placeholder="お問い合わせ内容をご入力ください。"></textarea>
+                  </div>
+                  <div class="contact-honeypot" aria-hidden="true"><label for="contact-website">ウェブサイト</label><input id="contact-website" name="website" type="text" tabindex="-1" autocomplete="off"></div>
+                  <button class="button primary" style="align-self:flex-start" type="submit">送信する →</button>
+                  <p class="form-status" data-form-status role="status" aria-live="polite"></p>
+                </form>
               </div>
               <div class="contact-social">
-                <a class="social-pill reveal" href="mailto:${escapeHtml(site.email)}?subject=${subject}&body=${bodyText}">${escapeHtml(site.email)}</a>
+                <a class="social-pill reveal" href="mailto:${escapeHtml(site.email)}?subject=${subject}&body=${bodyText}">フォームを送信できない場合はこちら<br>${escapeHtml(site.email)}</a>
                 <a class="social-pill reveal" href="${url("support/")}">アプリサポートを見る →</a>
-                <p class="contact-note">運営：${escapeHtml(site.developer)}<br>パスワード、認証コード、クレジットカード情報は送信しないでください。</p>
+                <p class="contact-note">運営：${escapeHtml(site.developer)}<br>入力内容はお問い合わせへの回答とサポートのために利用し、送信処理にはFormspreeを使用します。パスワード、認証コード、クレジットカード情報は送信しないでください。</p>
               </div>
             </div>
           </div>
@@ -516,6 +528,10 @@
   else content = renderNotFound();
 
   document.getElementById("site").innerHTML = renderHeader() + content + renderFooter();
+
+  if (page === "contact" && window.NANDAKAN_CONTACT) {
+    window.NANDAKAN_CONTACT.initContactForm(document.getElementById("contact-form"));
+  }
 
   const menuButton = document.querySelector(".menu-button");
   const nav = document.querySelector(".nav");

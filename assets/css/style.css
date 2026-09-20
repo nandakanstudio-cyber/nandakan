@@ -640,14 +640,24 @@ h1, h2, h3 { line-height: 1.35; margin: 0 0 0.5em; }
   margin-bottom: 8px;
 }
 .form-field {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
   border: 1.5px solid var(--line);
   border-radius: 14px;
   padding: 14px 18px;
-  color: var(--ink-soft);
+  color: var(--ink);
   background: var(--mist);
-  font-size: 15px;
+  font: inherit;
 }
-.form-field.textarea { min-height: 110px; }
+.form-field:focus { outline: 3px solid rgba(70, 88, 214, 0.16); border-color: var(--cobalt); }
+.form-field.textarea { min-height: 150px; resize: vertical; }
+.contact-honeypot { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+.form-status { min-height: 1.5em; margin: -4px 0 0; font-size: 14px; font-weight: 700; }
+.form-status.sending { color: var(--ink-soft); }
+.form-status.success { color: #167846; }
+.form-status.error { color: #b42318; }
+.contact-form-card .button:disabled { cursor: wait; opacity: 0.58; transform: none; }
 .contact-social { display: flex; flex-direction: column; gap: 12px; }
 .social-pill {
   background: #fff;
