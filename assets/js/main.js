@@ -245,6 +245,11 @@
 
   function renderAppDetail(app) {
     if (!app) return renderNotFound();
+    const released = app.slug === "fuufu-ringi";
+    const ctaTitle = released ? "夫婦稟議は公開中です" : "現在、開発を進めています";
+    const ctaBody = released ? "App Storeからダウンロードできます。" : "リリース情報は、このページで順次お知らせします。";
+    const ctaHref = released && app.storeUrl ? app.storeUrl : url("apps/");
+    const ctaLabel = released && app.storeUrl ? "App Storeでダウンロード" : released ? "サポートを見る" : "アプリ一覧へ";
     return `
       <main>
         <section class="detail-hero"><div class="container">
@@ -273,7 +278,7 @@
           <div class="feature-grid">${app.highlights.map((item, index) => `<div class="feature reveal"><span class="feature-number">0${index + 1}</span><h3>${escapeHtml(item)}</h3></div>`).join("")}</div>
         </div></section>
         <section style="padding:0 0 96px"><div class="container">
-          <div class="cta-panel reveal"><div><h2>現在、開発を進めています</h2><p>リリース情報は、このページで順次お知らせします。</p></div><a class="button on-blue" href="${url("apps/")}">アプリ一覧へ</a></div>
+          <div class="cta-panel reveal"><div><h2>${ctaTitle}</h2><p>${ctaBody}</p></div><a class="button on-blue" href="${escapeHtml(ctaHref)}">${ctaLabel}</a></div>
         </div></section>
       </main>`;
   }
@@ -400,8 +405,8 @@
   function supportSections(app) {
     if (app.slug === "fuufu-ringi") {
       return [
-        ["はじめに", "<p>夫婦稟議は、家族の相談ごとを申請・承認の形で整理するアプリです。現在は公開準備中です。正式リリース後の不具合報告やご要望も、このページの窓口で受け付けます。</p>"],
-        ["よくある質問", "<h3>夫婦ルームにはどう参加しますか？</h3><p>ルームを作成した方が表示する招待コードまたはQRコードを、参加する方の端末で入力・読み取ります。招待情報は信頼できる相手にだけ共有してください。</p><h3>通知が届きません</h3><p>iPhoneの「設定」→「通知」→「夫婦稟議」で通知が許可されているか確認してください。本アプリで使用する通知は、端末内で設定されるローカル通知です。</p><h3>カメラやカレンダーを許可しなくても使えますか？</h3><p>基本機能は利用できます。カメラはQRコードを読み取るとき、カレンダーは予定を追加するときだけ必要です。招待コードの手入力など、許可しない場合の代替手段も利用できます。</p><h3>端末を変更したらデータは引き継げますか？</h3><p>本アプリは匿名アカウントを利用するため、端末変更やアプリ削除の前後で自動的に同じアカウントへ戻れない場合があります。大切な情報は必要に応じて別途控えてください。</p>"],
+        ["はじめに", `<p>夫婦稟議は、家族の相談ごとを申請・承認の形で整理するアプリです。<a href="${escapeHtml(app.storeUrl)}">App Storeでダウンロード</a>できます。使い方のご質問や不具合の報告、ご要望はこのページの窓口からお寄せください。</p>`],
+        ["よくある質問", "<h3>夫婦ルームにはどう参加しますか？</h3><p>ルームを作成した方が表示する招待コードまたはQRコードを、参加する方の端末で入力・読み取ります。招待情報は信頼できる相手にだけ共有してください。</p><h3>通知が届きません</h3><p>iPhoneの「設定」→「通知」→「夫婦稟議」で通知が許可されているか確認してください。プッシュ通知を受け取るには、端末がインターネットに接続されている必要があります。</p><h3>カメラやカレンダーを許可しなくても使えますか？</h3><p>基本機能は利用できます。カメラはQRコードを読み取るとき、カレンダーは予定を追加するときだけ必要です。招待コードの手入力など、許可しない場合の代替手段も利用できます。</p><h3>端末を変更したらデータは引き継げますか？</h3><p>本アプリは匿名アカウントを利用するため、端末変更やアプリ削除の前後で自動的に同じアカウントへ戻れない場合があります。大切な情報は必要に応じて別途控えてください。</p>"],
         ["不具合を報告する", `<p>次の情報を添えて <a href="mailto:${escapeHtml(site.email)}?subject=${encodeURIComponent("【夫婦稟議】不具合・お問い合わせ")}">${escapeHtml(site.email)}</a> までご連絡ください。</p><ul><li>利用端末（例：iPhone 16）</li><li>iOSのバージョン</li><li>発生した画面と操作手順</li><li>表示されたメッセージ</li><li>可能であれば個人情報を隠したスクリーンショット</li></ul>`],
         ["プライバシーとデータ", `<p><a href="${url("privacy/fuufu-ringi/")}">プライバシーポリシー</a>で取得情報と利用目的を確認できます。アカウントと関連データの削除については、<a href="${url("account-deletion/fuufu-ringi/")}">データ削除の案内</a>をご覧ください。</p>`],
         ["運営・連絡先", `<p>運営：${escapeHtml(site.developer)}<br>メール：<a href="mailto:${escapeHtml(site.email)}">${escapeHtml(site.email)}</a></p><p>通常は数営業日以内の返信に努めますが、内容により時間をいただく場合があります。</p>`]
