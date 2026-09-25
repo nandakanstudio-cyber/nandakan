@@ -9,7 +9,7 @@ window.EVERYDAY_APPS = [
     color: "amber",
     icon: "assets/images/apps/fuufu-ringi.png",
     privacyUpdated: "2026年9月20日",
-    termsUpdated: "2026年9月10日",
+    termsUpdated: "2026年9月25日",
     hasAccount: true,
     description: "夫婦や家族の相談ごとを申請・承認の形で楽しく整理できる、家庭内稟議アプリ。",
     highlights: ["相談ごとを申請形式で整理", "承認までの流れがひと目でわかる", "家庭の意思決定をもっと楽しく"]
