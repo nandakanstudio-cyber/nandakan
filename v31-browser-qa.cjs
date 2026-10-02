@@ -16,7 +16,7 @@ for(const item of JSON.parse(fs.readFileSync('v31-source-manifest.json','utf8'))
  for(const [w,h] of [[1440,1000],[1280,800],[1024,768],[768,1024],[390,844],[375,812],[320,700],[375,667],[320,568],[844,390]]){
   const context=await browser.newContext({viewport:{width:w,height:h}});const page=await context.newPage();
   page.on('pageerror',e=>results.errors.push(e.message));page.on('response',r=>{if(r.status()>=400)results.errors.push(r.url()+':'+r.status())});
-  await page.goto(url);await page.waitForFunction(()=>Array.from(document.images).every(i=>i.complete&&i.naturalWidth));
+  await page.goto(url);await page.waitForFunction(()=>Array.from(document.images).filter(i=>i.loading!=='lazy').every(i=>i.complete&&i.naturalWidth));
   const enhanced=await page.locator('html').evaluate(e=>e.classList.contains('motion-ready'));
   const vp={width:w,height:h,enhanced,scenes:[]};results.viewports.push(vp);
   for(let scene=0;scene<(enhanced?7:1);scene++){
@@ -57,6 +57,7 @@ for(const item of JSON.parse(fs.readFileSync('v31-source-manifest.json','utf8'))
  await page.locator('.motion-toggle').click();check(!await page.locator('html').evaluate(e=>e.classList.contains('motion-ready')),'motion off');check(await page.locator('.scene-copy[data-scene="0"]').isVisible(),'fallback intro');
  await page.locator('.motion-toggle').click();check(await page.locator('html').evaluate(e=>e.classList.contains('motion-ready')),'motion on');
  await page.locator('.nav-cta').click();await page.waitForTimeout(1800);check(await page.locator('#apps').evaluate(e=>e.getBoundingClientRect().top<innerHeight),'skip to app list');
+ await page.evaluate(async()=>{await Promise.all(Array.from(document.images).map(async image=>{image.loading='eager';await image.decode();}));});
  const links=await page.locator('a').evaluateAll(a=>a.map(x=>x.href));for(const link of [...new Set(links)])if(link.startsWith(url.split('/nandakan/')[0])&&!link.includes('#')){const r=await page.request.get(link);check(r.ok(),`broken local link ${link}`)}
  results.interactions.push('next/previous/last scene','ArrowRight','motion off/on','skip app list','all home local links');await context.close();
  for(const mode of ['no-js','reduced-motion']){
