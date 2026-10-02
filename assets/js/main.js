@@ -304,6 +304,14 @@
           <div class="page-label">${isPrivacy ? "PRIVACY" : "TERMS"}</div>
           <h1>${title}</h1><p>${description}</p>
         </div></section>
+        ${isPrivacy ? `<article class="container legal" id="website-analytics">
+          <section><h2>このウェブサイトのアクセス解析</h2>
+          <p>NANDAKANは、このウェブサイトの使いやすさやアプリ紹介を改善するため、Google LLCのGoogle Analyticsを利用します。訪問者が「許可する」を選んだ場合にのみGoogleの解析タグを読み込み、Cookieを使用します。「許可しない」を選んでもサイトをご利用いただけます。</p>
+          <p>解析対象は閲覧ページ、参照元サイト、閲覧に伴う利用状況、App Storeへのリンク操作と対象アプリです。Googleは通信に伴うIPアドレス、ブラウザ・端末等の情報を処理します。お問い合わせの入力内容、氏名、メールアドレス、URLのクエリ文字列やフラグメントを解析イベントに含めません。参照元はサイトのオリジンのみを送信し、広告向け機能やGoogleシグナルは利用しません。</p>
+          <p>解析の選択はこのブラウザに180日間保存します。画面左下の「アクセス解析の設定」からいつでも変更できます。許可を取り消すと、このサイトが設定した解析Cookieを削除し、ページを再読み込みして以後の解析を停止します。ブラウザの保存が制限される場合、選択はそのページでのみ有効です。すでに送信したデータは、この操作で遡って削除されるものではありません。</p>
+          <p>Googleによる情報の取り扱いは、<a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Googleのプライバシーポリシー</a>および<a href="https://policies.google.com/technologies/partner-sites" target="_blank" rel="noopener noreferrer">Googleのサービスを使用するサイトやアプリから収集した情報の利用</a>をご確認ください。お問い合わせは<a href="mailto:${escapeHtml(site.email)}">${escapeHtml(site.email)}</a>へお寄せください。</p>
+          <p class="legal-meta">このウェブサイトのアクセス解析に関する最終更新日：2026年10月2日</p></section>
+        </article>` : ""}
         <section><div class="container directory">
           ${apps.map((app) => `<a class="directory-item" href="${url(`${kind}/${app.slug}/`)}"><div><strong>${escapeHtml(app.name)}</strong><span>${title}を読む</span></div><span class="directory-arrow" aria-hidden="true">→</span></a>`).join("")}${isPrivacy ? `
           <a class="directory-item" href="${url("privacy/tottecloud/")}"><div><strong>撮ってクラウド</strong><span>プライバシーポリシーを読む</span></div><span class="directory-arrow" aria-hidden="true">→</span></a>` : ""}

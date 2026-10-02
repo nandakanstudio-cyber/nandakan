@@ -1,0 +1,69 @@
+/* Scoped controls: do not alter existing page, typography, or motion styles. */
+#nandakan-analytics-banner,
+#nandakan-analytics-settings {
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+  color: #172b46;
+  background: #fff;
+  border: 1px solid #c6d3e5;
+  box-shadow: 0 3px 20px #152c4a1a;
+  z-index: 10000;
+}
+#nandakan-analytics-banner {
+  position: fixed;
+  bottom: max(16px, env(safe-area-inset-bottom));
+  left: 16px;
+  right: 16px;
+  max-width: 700px;
+  max-height: 65vh;
+  overflow: auto;
+  margin: 0 auto;
+  padding: 20px;
+  border-radius: 16px;
+  font-size: 14px;
+  line-height: 1.7;
+  text-align: left;
+}
+#nandakan-analytics-banner p { margin: 0 0 8px; font-size: inherit; color: inherit; line-height: inherit; }
+#nandakan-analytics-banner a { color: #1e4fb4; text-decoration: underline; }
+#nandakan-analytics-actions { display: flex; gap: 12px; margin-top: 12px; }
+#nandakan-analytics-actions button {
+  flex: 1;
+  min-height: 44px;
+  padding: 10px 14px;
+  border: 1px solid #738ba9;
+  border-radius: 8px;
+  background: #f5f8fe;
+  color: #172b46;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 600;
+}
+#nandakan-analytics-settings {
+  position: fixed;
+  bottom: max(8px, env(safe-area-inset-bottom));
+  left: 8px;
+  padding: 8px 12px;
+  min-height: 44px;
+  border-radius: 8px;
+  font-size: 12px;
+  cursor: pointer;
+}
+#nandakan-analytics-banner [hidden],
+#nandakan-analytics-banner[hidden],
+#nandakan-analytics-settings[hidden] { display: none !important; }
+#nandakan-analytics-banner a:focus-visible,
+#nandakan-analytics-banner button:focus-visible,
+#nandakan-analytics-settings:focus-visible { outline: 3px solid #235ed0; outline-offset: 3px; }
+/* Keep the existing homepage app rail clickable beneath both consent controls. */
+.home-document.motion-ready #nandakan-analytics-banner,
+.home-document.motion-ready #nandakan-analytics-settings { bottom: 98px; }
+@media (max-width: 900px) {
+  .home-document.motion-ready #nandakan-analytics-banner,
+  .home-document.motion-ready #nandakan-analytics-settings {
+    bottom: calc(max(12px, env(safe-area-inset-bottom)) + 70px);
+  }
+}
+@media print {
+  #nandakan-analytics-banner, #nandakan-analytics-settings { display: none !important; }
+}
