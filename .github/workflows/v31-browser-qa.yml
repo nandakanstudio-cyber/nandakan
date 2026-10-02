@@ -1,0 +1,45 @@
+name: V3.1 browser verification
+on:
+  push:
+    branches:
+      - review/v31-browser-qa-20261002
+    paths:
+      - v31-candidate.patch
+      - v31-source-manifest.json
+      - v31-browser-qa.cjs
+      - .github/workflows/v31-browser-qa.yml
+permissions:
+  contents: read
+jobs:
+  browser-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Verify production baseline and apply candidate only in the runner
+        run: |
+          git fetch origin main
+          test "$(git rev-parse FETCH_HEAD)" = "2e5862beb3c2dff475bff66644e0fb9e496ee2b4"
+          git apply --check v31-candidate.patch
+          git apply v31-candidate.patch
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+      - name: Run regression tests
+        run: node --test tests/*.test.js
+      - name: Install browser test dependency
+        run: npm install --no-save --ignore-scripts --package-lock=false playwright@1.62.1
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Render desktop and mobile and exercise all scenes
+        run: node v31-browser-qa.cjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v31-browser-verification
+          path: v31-qa-artifacts/
+          retention-days: 1
+          if-no-files-found: warn
