@@ -168,7 +168,14 @@
   }
 
   function renderApps() {
-    const count = String(apps.length).padStart(2, "0");
+    // This app already has standalone production pages; keep their existing URLs.
+    const listedApps = [...apps, {
+      slug: "tottecloud", name: "撮ってクラウド", mark: "PHOTO", color: "blue",
+      detailPath: "tottecloud/", icon: "assets/images/home-v31/tottecloud.svg",
+      description: "アプリで撮った写真を、指定したGoogle Driveフォルダへ。用途に合わせて、撮影後の自動送信と、写真を選んで送信する方法を使い分けられます。",
+      status: "リリース準備中"
+    }];
+    const count = String(listedApps.length).padStart(2, "0");
     return `
       <main>
         <section class="page-hero">
@@ -181,14 +188,15 @@
         <section class="section" style="padding-top:56px">
           <div class="container">
             <div class="app-list">
-              ${apps.map((app) => `
+              ${listedApps.map((app) => `
                 <div class="app-list-card reveal">
                   ${appIcon(app, true)}
                   <div class="app-list-info">
                     <h3>${escapeHtml(app.name)}</h3>
                     <p>${escapeHtml(app.description)}</p>
+                    <p class="app-list-status">${escapeHtml(app.status)}</p>
                   </div>
-                  <a class="button primary" href="${url(`apps/${app.slug}/`)}">詳細を見る</a>
+                  <a class="button primary" href="${url(app.detailPath || `apps/${app.slug}/`)}">詳細を見る</a>
                 </div>`).join("")}
             </div>
           </div>
@@ -297,7 +305,8 @@
           <h1>${title}</h1><p>${description}</p>
         </div></section>
         <section><div class="container directory">
-          ${apps.map((app) => `<a class="directory-item" href="${url(`${kind}/${app.slug}/`)}"><div><strong>${escapeHtml(app.name)}</strong><span>${title}を読む</span></div><span class="directory-arrow" aria-hidden="true">→</span></a>`).join("")}
+          ${apps.map((app) => `<a class="directory-item" href="${url(`${kind}/${app.slug}/`)}"><div><strong>${escapeHtml(app.name)}</strong><span>${title}を読む</span></div><span class="directory-arrow" aria-hidden="true">→</span></a>`).join("")}${isPrivacy ? `
+          <a class="directory-item" href="${url("privacy/tottecloud/")}"><div><strong>撮ってクラウド</strong><span>プライバシーポリシーを読む</span></div><span class="directory-arrow" aria-hidden="true">→</span></a>` : ""}
         </div></section>
       </main>`;
   }
@@ -398,6 +407,7 @@
         </div></section>
         <section><div class="container directory">
           ${apps.map((app) => `<a class="directory-item" href="${url(`support/${app.slug}/`)}"><div><strong>${escapeHtml(app.name)}</strong><span>サポート情報を見る</span></div><span class="directory-arrow" aria-hidden="true">→</span></a>`).join("")}
+          <a class="directory-item" href="${url("support/tottecloud/")}"><div><strong>撮ってクラウド</strong><span>サポート情報を見る</span></div><span class="directory-arrow" aria-hidden="true">→</span></a>
         </div></section>
       </main>`;
   }
