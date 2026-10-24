@@ -253,8 +253,8 @@
 
   function renderAppDetail(app) {
     if (!app) return renderNotFound();
-    const released = app.slug === "fuufu-ringi";
-    const ctaTitle = released ? "夫婦稟議は公開中です" : "現在、開発を進めています";
+    const released = app.status === "公開中" && Boolean(app.storeUrl);
+    const ctaTitle = released ? `${escapeHtml(app.name)}は公開中です` : "現在、開発を進めています";
     const ctaBody = released ? "App Storeからダウンロードできます。" : "リリース情報は、このページで順次お知らせします。";
     const ctaHref = released && app.storeUrl ? app.storeUrl : url("apps/");
     const ctaLabel = released && app.storeUrl ? "App Storeでダウンロード" : released ? "サポートを見る" : "アプリ一覧へ";
