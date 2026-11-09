@@ -16,6 +16,7 @@ window.EVERYDAY_APPS = [
   },
   {
     slug: "kinenbin",
+    termsUpdated: "2026年11月9日",
     name: "記念便",
     mark: "便",
     category: "記念日・ライフスタイル",
