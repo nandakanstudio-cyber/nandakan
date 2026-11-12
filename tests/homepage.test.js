@@ -31,7 +31,7 @@ test('homepage preserves every existing app, description, status and verified st
     if (app.storeUrl) assert.ok(card[0].includes(app.storeUrl), 'verified store URL');
   }
   assert.match(html, /href="tottecloud\/"/);
-  assert.match(html, /リリース準備中/);
+  assert.doesNotMatch(html, /リリース準備中/);
   assert.equal((html.match(/紹介デモ・配信状況未確認/g) || []).length, 4);
 });
 
@@ -65,4 +65,44 @@ test('existing TotteCloud routes are discoverable without inventing a terms page
   assert.match(render('privacy'), /href="https:\/\/example.test\/nandakan\/privacy\/tottecloud\/"/);
   assert.match(render('support'), /href="https:\/\/example.test\/nandakan\/support\/tottecloud\/"/);
   assert.doesNotMatch(render('terms'), /terms\/tottecloud/);
+});
+
+
+test('TotteCloud is published with its verified App Store destination on entry pages', () => {
+  const store = 'https://apps.apple.com/jp/app/id6815161304';
+  const card = html.match(/<article[^>]+data-app-slug="tottecloud"[^>]*>[\s\S]*?<\/article>/)[0];
+  assert.ok(card.includes('公開中'));
+  assert.ok(card.includes(store));
+  for (const page of ['tottecloud/index.html', 'support/tottecloud/index.html']) {
+    assert.ok(read(page).includes(store));
+    assert.ok(read(page).includes('App Storeで公開中'));
+    assert.ok(!read(page).includes('リリース準備中'));
+  }
+  assert.ok(render('apps').includes('公開中'));
+  assert.ok(render('apps').includes(store));
+  assert.ok(!render('apps').includes('リリース準備中'));
+});
+
+test('TotteCloud retains both websites and adds paths back to the comprehensive studio', () => {
+  assert.ok(read('tottecloud/index.html').includes('href="https://nandakan-studio.com/"'));
+  for (const page of ['tottecloud/index.html', 'privacy/tottecloud/index.html', 'support/tottecloud/index.html']) {
+    assert.ok(read(page).includes('NANDAKANStudio 総合サイト'));
+    for (const [, link] of read(page).matchAll(/(?:href|src)="([^"]+)"/g)) {
+      if (/^(?:#|https:|mailto:)/.test(link)) continue;
+      assert.ok(fs.existsSync(path.resolve(root, path.dirname(page), link.split('?')[0])), page + ': ' + link);
+    }
+  }
+});
+
+test('TotteCloud paid and free plan limits remain unchanged', () => {
+  const intro = read('tottecloud/index.html');
+  for (const fact of ['月30枚', '5枚増えます', '無料プランには広告があります', 'Proは買い切り', 'Google Driveの保存容量は増えません']) {
+    assert.ok(intro.includes(fact), fact);
+  }
+});
+
+test('TotteCloud store link has explicit light and dark colors', () => {
+  const css = read('tottecloud/style.css');
+  assert.match(css, /\.store-link[^}]*background: #084eab; color: #fff/);
+  assert.match(css, /\.store-link[^}]*background: #91c4ff; color: #14181e/);
 });

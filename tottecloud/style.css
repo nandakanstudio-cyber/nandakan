@@ -11,3 +11,8 @@ nav { border-top: 1px solid #89929d; margin-top: 2rem; padding-top: 1rem; }
   body { background: #14181e; color: #eef2f6; }
   a { color: #91c4ff; }
 }
+
+.store-link { display: inline-block; padding: .65rem 1rem; border-radius: .5rem; background: #084eab; color: #fff; font-weight: 700; }
+@media (prefers-color-scheme: dark) {
+  .store-link { background: #91c4ff; color: #14181e; }
+}

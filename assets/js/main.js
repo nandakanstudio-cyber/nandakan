@@ -171,9 +171,9 @@
     // This app already has standalone production pages; keep their existing URLs.
     const listedApps = [...apps, {
       slug: "tottecloud", name: "撮ってクラウド", mark: "PHOTO", color: "blue",
-      detailPath: "tottecloud/", icon: "assets/images/home-v31/tottecloud.svg",
+      detailPath: "tottecloud/", storeUrl: "https://apps.apple.com/jp/app/id6815161304", icon: "assets/images/home-v31/tottecloud.svg",
       description: "アプリで撮った写真を、指定したGoogle Driveフォルダへ。用途に合わせて、撮影後の自動送信と、写真を選んで送信する方法を使い分けられます。",
-      status: "リリース準備中"
+      status: "公開中"
     }];
     const count = String(listedApps.length).padStart(2, "0");
     return `
@@ -197,6 +197,7 @@
                     <p class="app-list-status">${escapeHtml(app.status)}</p>
                   </div>
                   <a class="button primary" href="${url(app.detailPath || `apps/${app.slug}/`)}">詳細を見る</a>
+                  ${app.slug === "tottecloud" ? `<a class="button" href="${escapeHtml(app.storeUrl)}">App Store</a>` : ""}
                 </div>`).join("")}
             </div>
           </div>
