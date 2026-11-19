@@ -484,6 +484,12 @@ h1, h2, h3 { line-height: 1.35; margin: 0 0 0.5em; }
 }
 .category { font-family: var(--font-mono); font-size: 13px; color: var(--ink-soft); margin: 0 0 16px; }
 .lead { font-size: 17px; color: var(--ink-soft); max-width: 42em; }
+.detail-download { margin-top: 22px; }
+.detail-download p { margin: 10px 0 0; color: var(--ink-soft); font-size: 14px; }
+.detail-start { max-width: 42em; margin-top: 26px; }
+.detail-start h2 { font-size: 18px; margin: 0 0 12px; }
+.detail-start ol { margin: 0; padding-left: 1.5em; color: var(--ink-soft); }
+.detail-start li + li { margin-top: 8px; }
 .legal-links { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 26px; }
 .legal-links .button { padding: 12px 22px; font-size: 14px; }
 

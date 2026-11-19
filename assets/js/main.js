@@ -269,7 +269,15 @@
               <span class="status">${escapeHtml(app.status)}</span>
               <h1>${escapeHtml(app.name)}</h1>
               <p class="category">${escapeHtml(app.category)} · ${escapeHtml(app.device || "iPhone向け")}</p>
-              <p class="lead">${escapeHtml(app.description)}</p>
+              <p class="lead">${escapeHtml(app.detailIntro || app.description)}</p>
+              ${released && app.downloadNote ? `<div class="detail-download">
+                <a class="button primary" href="${escapeHtml(app.storeUrl)}" aria-describedby="download-note">App Storeでダウンロード</a>
+                <p id="download-note">${escapeHtml(app.downloadNote)}</p>
+              </div>` : ""}
+              ${app.gettingStarted ? `<section class="detail-start" aria-labelledby="getting-started-title">
+                <h2 id="getting-started-title">ふたりで始めるには</h2>
+                <ol>${app.gettingStarted.map((step) => `<li>${escapeHtml(step)}</li>`).join("")}</ol>
+              </section>` : ""}
               <div class="legal-links">
                 <a class="button" href="${url(`privacy/${app.slug}/`)}">プライバシーポリシー</a>
                 <a class="button" href="${url(`terms/${app.slug}/`)}">利用規約</a>
