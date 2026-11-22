@@ -252,13 +252,21 @@
       </main>`;
   }
 
+  function appRelatedNavigation(app, links) {
+    const items = [[`apps/${app.slug}/`, "アプリの紹介"], ...links];
+    return `<nav class="legal-links" aria-label="アプリの関連情報">
+      ${items.map(([path, label]) => `<a class="button" href="${url(path)}">${escapeHtml(label)}</a>`).join("")}
+    </nav>`;
+  }
+
   function renderAppDetail(app) {
     if (!app) return renderNotFound();
     const released = app.status === "公開中" && Boolean(app.storeUrl);
     const ctaTitle = released ? `${escapeHtml(app.name)}は公開中です` : "現在、開発を進めています";
-    const ctaBody = released ? "App Storeからダウンロードできます。" : "リリース情報は、このページで順次お知らせします。";
-    const ctaHref = released && app.storeUrl ? app.storeUrl : url("apps/");
-    const ctaLabel = released && app.storeUrl ? "App Storeでダウンロード" : released ? "サポートを見る" : "アプリ一覧へ";
+    const ctaBody = released ? "App Storeからダウンロードできます。" : "開発中の内容を紹介しています。";
+    const ctaHref = released ? app.storeUrl : url("apps/");
+    const ctaLabel = released ? "App Storeでダウンロード" : "アプリ一覧へ";
+    const features = app.detailFeatures ?? app.highlights.map(title => ({ title }));
     return `
       <main>
         <section class="detail-hero"><div class="container">
@@ -281,10 +289,14 @@
         </div></section>
         <section class="section" style="padding:64px 0"><div class="container">
           <div class="section-heading reveal">
-            <div class="page-label">HIGHLIGHTS</div>
-            <h2>主な特徴</h2>
+            <h2>${released ? "主な特徴" : "構想している使い方"}</h2>
           </div>
-          <div class="feature-grid">${app.highlights.map((item, index) => `<div class="feature reveal"><span class="feature-number">0${index + 1}</span><h3>${escapeHtml(item)}</h3></div>`).join("")}</div>
+          <div class="feature-grid">
+            ${features.map(({ title, description }) => `<div class="feature reveal">
+              <h3>${escapeHtml(title)}</h3>
+              ${description ? `<p>${escapeHtml(description)}</p>` : ""}
+            </div>`).join("")}
+          </div>
         </div></section>
         <section style="padding:0 0 96px"><div class="container">
           <div class="cta-panel reveal"><div><h2>${ctaTitle}</h2><p>${ctaBody}</p></div><a class="button on-blue" href="${escapeHtml(ctaHref)}">${ctaLabel}</a></div>
@@ -296,7 +308,7 @@
     const isPrivacy = kind === "privacy";
     const title = isPrivacy ? "プライバシーポリシー" : "利用規約";
     const description = isPrivacy
-      ? "各アプリの情報の取り扱いについてご案内します。App Store Connectには、対象アプリの個別ページURLをご登録ください。"
+      ? "アプリ内の情報の取り扱いは、各アプリの個別ページをご覧ください。このウェブサイトのアクセス解析についても以下でご案内します。"
       : "各アプリをご利用いただく際の条件をご案内します。";
     return `
       <main>
@@ -388,6 +400,11 @@
     const isPrivacy = kind === "privacy";
     const title = isPrivacy ? "プライバシーポリシー" : "利用規約";
     const sections = isPrivacy ? privacySections(app) : termsSections(app);
+    const privacyLinks = [
+      [`support/${app.slug}/`, "サポート"],
+      ["privacy/#website-analytics", "このサイトのアクセス解析"]
+    ];
+    if (app.hasAccount) privacyLinks.push([`account-deletion/${app.slug}/`, "データ削除の案内"]);
     const draftNote = app.slug === "fuufu-ringi" || (!isPrivacy && app.slug === "kinenbin")
       ? ""
       : '<p class="draft-note"><strong>仮文面：</strong>本ページは公開準備用のひな形です。アプリの実装・利用サービスに合わせ、公開前に内容をご確認ください。</p>';
@@ -398,6 +415,7 @@
           <div class="page-label">${isPrivacy ? "PRIVACY POLICY" : "TERMS OF USE"}</div>
           <h1>${escapeHtml(app.name)}<br>${title}</h1>
           <p>${escapeHtml(app.name)}をご利用いただく際の${isPrivacy ? "情報の取り扱い" : "利用条件"}について記載しています。</p>
+          ${isPrivacy ? appRelatedNavigation(app, privacyLinks) : ""}
         </div></section>
         <article class="container legal">
           ${draftNote}
@@ -429,15 +447,15 @@
         ["はじめに", `<p>夫婦稟議は、家族の相談ごとを申請・承認の形で整理するアプリです。<a href="${escapeHtml(app.storeUrl)}">App Storeでダウンロード</a>できます。使い方のご質問や不具合の報告、ご要望はこのページの窓口からお寄せください。</p>`],
         ["よくある質問", "<h3>夫婦ルームにはどう参加しますか？</h3><p>ルームを作成した方が表示する招待コードまたはQRコードを、参加する方の端末で入力・読み取ります。招待情報は信頼できる相手にだけ共有してください。</p><h3>通知が届きません</h3><p>iPhoneの「設定」→「通知」→「夫婦稟議」で通知が許可されているか確認してください。プッシュ通知を受け取るには、端末がインターネットに接続されている必要があります。</p><h3>カメラやカレンダーを許可しなくても使えますか？</h3><p>基本機能は利用できます。カメラはQRコードを読み取るとき、カレンダーは予定を追加するときだけ必要です。招待コードの手入力など、許可しない場合の代替手段も利用できます。</p><h3>端末を変更したらデータは引き継げますか？</h3><p>本アプリは匿名アカウントを利用するため、端末変更やアプリ削除の前後で自動的に同じアカウントへ戻れない場合があります。大切な情報は必要に応じて別途控えてください。</p>"],
         ["不具合を報告する", `<p>次の情報を添えて <a href="mailto:${escapeHtml(site.email)}?subject=${encodeURIComponent("【夫婦稟議】不具合・お問い合わせ")}">${escapeHtml(site.email)}</a> までご連絡ください。</p><ul><li>利用端末（例：iPhone 16）</li><li>iOSのバージョン</li><li>発生した画面と操作手順</li><li>表示されたメッセージ</li><li>可能であれば個人情報を隠したスクリーンショット</li></ul>`],
-        ["プライバシーとデータ", `<p><a href="${url("privacy/fuufu-ringi/")}">プライバシーポリシー</a>で取得情報と利用目的を確認できます。アカウントと関連データの削除については、<a href="${url("account-deletion/fuufu-ringi/")}">データ削除の案内</a>をご覧ください。</p>`],
+        ["アカウントとデータの削除", `<p>アカウントと関連データの削除については、<a href="${url("account-deletion/fuufu-ringi/")}">データ削除の案内</a>をご覧ください。</p>`],
         ["運営・連絡先", `<p>運営：${escapeHtml(site.developer)}<br>メール：<a href="mailto:${escapeHtml(site.email)}">${escapeHtml(site.email)}</a></p><p>通常は数営業日以内の返信に努めますが、内容により時間をいただく場合があります。</p>`]
       ];
     }
     return [
-      ["サポートについて", `<p>${escapeHtml(app.name)}は現在公開準備中です。使い方、ご要望、不具合に関するお問い合わせをメールで受け付けています。</p>`],
+      ["サポートについて", `<p>${escapeHtml(app.name)}は開発中です。アプリに関するご質問やご要望はメールでお寄せください。</p>`],
       ["お問い合わせ時にお知らせください", "<ul><li>アプリ名</li><li>利用端末とOSバージョン</li><li>発生した画面と操作手順</li><li>可能であれば個人情報を隠したスクリーンショット</li></ul>"],
       ["連絡先", `<p>運営：${escapeHtml(site.developer)}<br>メール：<a href="mailto:${escapeHtml(site.email)}?subject=${encodeURIComponent(`【${app.name}】お問い合わせ`)}">${escapeHtml(site.email)}</a></p>`],
-      ["関連情報", `<p><a href="${url(`privacy/${app.slug}/`)}">プライバシーポリシー</a> ／ <a href="${url(`terms/${app.slug}/`)}">利用規約</a></p>`]
+      ["利用規約", `<p><a href="${url(`terms/${app.slug}/`)}">利用規約を読む</a></p>`]
     ];
   }
 
@@ -450,6 +468,7 @@
           <div class="page-label">APP SUPPORT</div>
           <h1>${escapeHtml(app.name)}<br>サポート</h1>
           <p>${escapeHtml(app.name)}の使い方や不具合、データに関するご案内です。</p>
+          ${appRelatedNavigation(app, [[`privacy/${app.slug}/`, "プライバシーポリシー"]])}
         </div></section>
         <article class="container legal support-article">
           ${supportSections(app).map(([heading, content]) => `<section><h2>${heading}</h2>${content}</section>`).join("")}
