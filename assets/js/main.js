@@ -2,6 +2,7 @@
   "use strict";
 
   const apps = window.EVERYDAY_APPS || [];
+  const introductions = window.EVERYDAY_INTRODUCTIONS || [];
   const site = window.EVERYDAY_SITE || {};
   const scriptUrl = new URL(document.querySelector('script[src*="main.js"]').src);
   const rootUrl = new URL("../../", scriptUrl);
@@ -174,7 +175,7 @@
       detailPath: "tottecloud/", storeUrl: "https://apps.apple.com/jp/app/id6815161304", icon: "assets/images/home-v31/tottecloud.svg",
       description: "アプリで撮った写真を、指定したGoogle Driveフォルダへ。用途に合わせて、撮影後の自動送信と、写真を選んで送信する方法を使い分けられます。",
       status: "公開中"
-    }];
+    }, ...introductions];
     const count = String(listedApps.length).padStart(2, "0");
     return `
       <main>
@@ -278,12 +279,12 @@
               <h1>${escapeHtml(app.name)}</h1>
               <p class="category">${escapeHtml(app.category)} · ${escapeHtml(app.device || "iPhone向け")}</p>
               <p class="lead">${escapeHtml(app.description)}</p>
-              <div class="legal-links">
+              ${apps.includes(app) ? `<div class="legal-links">
                 <a class="button" href="${url(`privacy/${app.slug}/`)}">プライバシーポリシー</a>
                 <a class="button" href="${url(`terms/${app.slug}/`)}">利用規約</a>
                 <a class="button" href="${url(`support/${app.slug}/`)}">サポート</a>
                 ${app.hasAccount ? `<a class="button" href="${url(`account-deletion/${app.slug}/`)}">データ削除</a>` : ""}
-              </div>
+              </div>` : ""}
             </div>
           </div>
         </div></section>
@@ -559,7 +560,7 @@
   let content;
   if (page === "home") content = renderHome();
   else if (page === "apps") content = renderApps();
-  else if (page === "app") content = renderAppDetail(appBySlug(slug));
+  else if (page === "app") content = renderAppDetail(appBySlug(slug) || introductions.find((app) => app.slug === slug));
   else if (page === "profile") content = renderProfile();
   else if (page === "privacy") content = renderDirectory("privacy");
   else if (page === "terms") content = renderDirectory("terms");

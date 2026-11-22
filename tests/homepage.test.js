@@ -215,3 +215,49 @@ test('the detail renderer still accepts cached app data with text-only highlight
   assert.match(detail, /<h3>相談ごとを申請形式で整理<\/h3>/);
   assert.doesNotMatch(detail, /<p>undefined<\/p>/);
 });
+
+test('development introductions have unique entries and matching catalog and detail URLs', () => {
+  const expected = ['gigascope', 'kanatap', 'flickstrike', 'stepgrid', 'otona-traits-note', 'sumaho-iiwake-log', 'tejun-camera', 'wakemap', 'ainori', 'kazoku-renraku', 'yorisoi'];
+  const introductions = context.window.EVERYDAY_INTRODUCTIONS || [];
+  assert.deepEqual(Array.from(introductions, app => app.slug), expected);
+  const slugs = [...context.window.EVERYDAY_APPS, ...introductions].map(app => app.slug);
+  assert.equal(new Set(slugs).size, slugs.length);
+  const listing = render('apps');
+  for (const app of introductions) {
+    assert.equal(app.status, '開発中', app.slug);
+    assert.equal(app.storeUrl, undefined, app.slug);
+    assert.match(read('apps/' + app.slug + '/index.html'), /data-page="app" data-slug="[^"]+"/);
+    assert.ok(read('apps/' + app.slug + '/index.html').includes('data-slug="' + app.slug + '"'));
+    const card = html.match(new RegExp('<article[^>]+data-app-slug="' + app.slug + '"[^>]*>[\\s\\S]*?</article>', 'g'));
+    assert.equal(card?.length, 1, app.slug);
+    assert.ok(card[0].includes('<span class="app-status">開発中</span>'), app.slug);
+    assert.ok(card[0].includes(app.description), app.slug);
+    assert.ok(card[0].includes('href="apps/' + app.slug + '/"'), app.slug);
+    assert.doesNotMatch(card[0], /apps\.apple\.com|href="(?:support|privacy|terms)\//, app.slug);
+    assert.equal(listing.split('href="https://example.test/nandakan/apps/' + app.slug + '/"').length - 1, 1, app.slug);
+  }
+});
+
+test('introduction-only details present three uses and no store or app-specific policy or support links', () => {
+  for (const slug of ['gigascope', 'kanatap', 'flickstrike', 'stepgrid', 'otona-traits-note', 'sumaho-iiwake-log', 'tejun-camera', 'wakemap', 'ainori', 'kazoku-renraku', 'yorisoi']) {
+    const page = render('app', slug);
+    assert.match(page, /<span class="status">開発中<\/span>/, slug);
+    assert.match(page, /構想している使い方/, slug);
+    const features = [...page.matchAll(/<div class="feature reveal">\s*<h3>[^<]+<\/h3>\s*<p>([^<]+)<\/p>/g)];
+    assert.equal(features.length, 3, slug);
+    assert.doesNotMatch(page, /href="https:\/\/apps\.apple\.com\//, slug);
+    for (const kind of ['privacy', 'support', 'terms']) {
+      assert.ok(!page.includes('/' + kind + '/' + slug + '/'), slug + ' detail');
+      assert.ok(!render(kind).includes('/' + kind + '/' + slug + '/'), slug + ' directory');
+      assert.ok(!fs.existsSync(path.join(root, kind, slug, 'index.html')), slug + ' no placeholder route');
+    }
+  }
+});
+
+test('FuufuTODO explains the verified assignment, change, reaction and widget concepts', () => {
+  const detail = render('app', 'fuufu-todo');
+  for (const phrase of ['自分と相手', '左右', '担当を変更', '完了', 'ありがとう', 'ウィジェット', '残り件数', '次の予定']) {
+    assert.ok(detail.includes(phrase), phrase);
+  }
+  assert.match(detail, /<span class="status">開発中<\/span>/);
+});

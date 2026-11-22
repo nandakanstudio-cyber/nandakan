@@ -45,6 +45,10 @@ python3 -m http.server 8000
 
 アイコン画像を使う場合は `assets/images/` に配置し、`assets/js/main.js` の `appIcon()` と `assets/css/style.css` を調整します。現在は画像なしでも成立する文字プレースホルダーを使用しています。
 
+### 紹介ページだけを追加する
+
+開発中でアプリ別のサポート・ポリシーを用意していない場合は、アプリ情報を `window.EVERYDAY_INTRODUCTIONS` に追加します。`status` は「開発中」とし、`detailFeatures` に使い方の見出しと説明を3件置きます。`apps/<slug>/index.html` とトップページのカードを追加すると、アプリ一覧と詳細に表示されます。
+
 ## プライバシーポリシーを修正する
 
 共通の仮文面は `assets/js/main.js` の `privacySections()` にあります。アプリ名、開発者名、メールアドレス、最終更新日は `assets/js/app-data.js` の値が自動的に反映されます。
