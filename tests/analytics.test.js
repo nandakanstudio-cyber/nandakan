@@ -111,9 +111,9 @@ test('withdrawing in another tab immediately stops this page too', () => {
   assert.equal(s.window[`ga-disable-${id}`], true);
   assert.equal(s.window.reloaded, true);
 });
-test('all 43 normal HTML pages include a single correctly resolved analytics script and stylesheet', () => {
+test('all 54 normal HTML pages include a single correctly resolved analytics script and stylesheet', () => {
   const files = fs.readdirSync(root, { recursive: true }).filter(p => p.endsWith('.html') && !p.startsWith('.git') && !p.startsWith('google'));
-  assert.equal(files.length, 43);
+  assert.equal(files.length, 54);
   for (const file of files) {
     const html = fs.readFileSync(path.join(root, file), 'utf8');
     for (const [asset, pattern] of [['assets/js/analytics.js', /<script[^>]*src="([^"]*analytics\.js[^\"]*)"[^>]*defer[^>]*>/g], ['assets/css/analytics.css', /<link[^>]*href="([^"]*analytics\.css[^\"]*)"[^>]*>/g]]) {

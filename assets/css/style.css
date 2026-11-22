@@ -494,15 +494,8 @@ h1, h2, h3 { line-height: 1.35; margin: 0 0 0.5em; }
   border-radius: var(--radius);
   padding: 30px 26px;
 }
-.feature-number {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  letter-spacing: 0.2em;
-  color: var(--cobalt);
-  display: block;
-  margin-bottom: 14px;
-}
 .feature h3 { font-size: 17px; margin: 0; }
+.feature p { color: var(--ink-soft); margin: 10px 0 0; }
 
 .cta-panel {
   background: var(--cobalt);
@@ -591,6 +584,7 @@ h1, h2, h3 { line-height: 1.35; margin: 0 0 0.5em; }
 .directory-arrow { color: var(--cobalt); font-weight: 700; }
 
 .legal { padding: 56px 0 96px; max-width: 760px; }
+.legal[id], .legal h2[id], .legal h3[id] { scroll-margin-top: 84px; }
 .legal section { margin-bottom: 36px; }
 .legal h2 {
   font-size: 19px;
