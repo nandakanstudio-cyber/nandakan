@@ -60,6 +60,21 @@ function render(page) {
   return site.innerHTML;
 }
 
+test('the app directory links directly to all three verified Japanese App Store listings', () => {
+  const directory = render('apps');
+  const storeIds = [...directory.matchAll(/href="https:\/\/apps\.apple\.com\/jp\/app\/(?:[^"/]+\/)?id(\d+)"/g)]
+    .map(([, id]) => id).sort();
+  assert.deepEqual(storeIds, ['6810217834', '6815161304', '6820390181']);
+});
+
+test('the illustrated phone labels both unverified demos as concept screens', () => {
+  for (const number of [5, 6]) {
+    const phoneScene = html.match(new RegExp(`<div class="screen-scene app-screen" data-scene="${number}"[^>]*>\\s*<div class="screen-top">([^<]+)</div>`));
+    assert.ok(phoneScene, `phone scene ${number}`);
+    assert.match(phoneScene[1], /コンセプト/, `phone scene ${number} needs a visible label`);
+  }
+});
+
 test('existing TotteCloud routes are discoverable without inventing a terms page', () => {
   assert.match(render('apps'), /href="https:\/\/example.test\/nandakan\/tottecloud\/"/);
   assert.match(render('privacy'), /href="https:\/\/example.test\/nandakan\/privacy\/tottecloud\/"/);

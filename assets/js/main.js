@@ -197,7 +197,7 @@
                     <p class="app-list-status">${escapeHtml(app.status)}</p>
                   </div>
                   <a class="button primary" href="${url(app.detailPath || `apps/${app.slug}/`)}">詳細を見る</a>
-                  ${app.slug === "tottecloud" ? `<a class="button" href="${escapeHtml(app.storeUrl)}">App Store</a>` : ""}
+                  ${app.status === "公開中" && app.storeUrl ? `<a class="button" href="${escapeHtml(app.storeUrl)}">App Store</a>` : ""}
                 </div>`).join("")}
             </div>
           </div>
