@@ -263,10 +263,6 @@
   function renderAppDetail(app) {
     if (!app) return renderNotFound();
     const released = app.status === "公開中" && Boolean(app.storeUrl);
-    const ctaTitle = released ? `${escapeHtml(app.name)}は公開中です` : "現在、開発を進めています";
-    const ctaBody = released ? "App Storeからダウンロードできます。" : "開発中の内容を紹介しています。";
-    const ctaHref = released ? app.storeUrl : url("apps/");
-    const ctaLabel = released ? "App Storeでダウンロード" : "アプリ一覧へ";
     const features = app.detailFeatures ?? app.highlights.map(title => ({ title }));
     return `
       <main>
@@ -279,6 +275,7 @@
               <h1>${escapeHtml(app.name)}</h1>
               <p class="category">${escapeHtml(app.category)} · ${escapeHtml(app.device || "iPhone向け")}</p>
               <p class="lead">${escapeHtml(app.description)}</p>
+              ${released ? `<div class="button-row detail-cta"><a class="button primary" href="${escapeHtml(app.storeUrl)}">App Storeでダウンロード</a></div>` : ""}
               ${apps.includes(app) ? `<div class="legal-links">
                 <a class="button" href="${url(`privacy/${app.slug}/`)}">プライバシーポリシー</a>
                 <a class="button" href="${url(`terms/${app.slug}/`)}">利用規約</a>
@@ -299,9 +296,9 @@
             </div>`).join("")}
           </div>
         </div></section>
-        <section style="padding:0 0 96px"><div class="container">
-          <div class="cta-panel reveal"><div><h2>${ctaTitle}</h2><p>${ctaBody}</p></div><a class="button on-blue" href="${escapeHtml(ctaHref)}">${ctaLabel}</a></div>
-        </div></section>
+        ${released ? "" : `<section style="padding:0 0 96px"><div class="container">
+          <div class="cta-panel reveal"><div><h2>現在、開発を進めています</h2><p>開発中の内容を紹介しています。</p></div><a class="button on-blue" href="${escapeHtml(url("apps/"))}">アプリ一覧へ</a></div>
+        </div></section>`}
       </main>`;
   }
 
